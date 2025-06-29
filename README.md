@@ -75,19 +75,34 @@ The mod enhances the following commands with intelligent suggestions:
 
 ### How to Use
 
-1. **Type the command**: Start typing `/mute ` in chat
+#### Single Player / Local World
+1. **Type the command**: Start typing `/mute ` or `/mf ` in chat
 2. **Press TAB**: Use the Tab key to cycle through suggestions
 3. **Player Names**: The mod will suggest online players
 4. **Durations**: Common durations like `10m`, `1h`, `1d`, `perm`
 5. **Reasons**: Turkish mute reasons or your custom reasons
 
+#### Multiplayer Servers
+**Note**: On multiplayer servers, client-side commands may not show tab completion. However, all commands still work perfectly:
+
+1. **Direct commands work**: Type `/mf PlayerName Chat Kirletimi` directly - it will work!
+2. **Helper commands**: Use `/mutehelp`, `/mfhelp`, `/tempmutehelp`, `/unmutehelp` for tab completion
+3. **Suggestions still appear**: Helper commands show full tab completion and suggestions
+
 ### Example Usage
 
 ```
-/mute PlayerName 1h Chat Kirletimi
-/tempmute TrollPlayer 30m Spam
-/mute BadPlayer perm Hakaret
-/mf SpeedyPlayer Cinsellik        # NEW! Auto-applies 60m duration
+# Direct Commands (work in both single/multiplayer)
+/mf PlayerName Chat Kirletimi     # Auto-applies 10m duration
+/m PlayerName 1h Spam             # Direct mute command
+/tm PlayerName 30m Flood          # Direct temp mute
+/um PlayerName                    # Direct unmute
+
+# Helper Commands (better for multiplayer tab completion)
+/mfhelp PlayerName Chat Kirletimi # Shows the mute command, you press Enter
+/mutehelp PlayerName 1h Spam      # Shows the mute command, you press Enter
+/tempmutehelp PlayerName 30m Flood # Shows the temp mute command
+/unmutehelp PlayerName            # Shows the unmute command
 ```
 
 ## Configuration

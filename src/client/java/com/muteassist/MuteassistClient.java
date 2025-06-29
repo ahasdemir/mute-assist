@@ -4,6 +4,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
+import com.muteassist.config.MuteAssistConfig;
+import com.muteassist.util.CommandUtil;
 
 public class MuteassistClient implements ClientModInitializer {
 	@Override
