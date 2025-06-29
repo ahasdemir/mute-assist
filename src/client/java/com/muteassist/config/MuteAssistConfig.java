@@ -10,7 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Configuration manager for Mute Assist mod
@@ -63,6 +65,28 @@ public class MuteAssistConfig {
     public boolean enableDebugLogging = false;
     public boolean sortPlayersSuggestions = true;
     public boolean enablePartialReasonMatching = true;
+    
+    // Reason to duration mapping for /mf command
+    public Map<String, String> reasonDurationMap = new HashMap<String, String>() {{
+        put("Chat Kirletimi", "10m");
+        put("Cinsellik", "60m");
+        put("Argo Kelime Kullanımı", "60m");
+        put("Amacı Dışında AdaReklam Kullanımı", "60m");
+        put("Argo Kelime Benzetmeleri", "30m");
+        put("Chati Amacı Dışında Kullanma", "35m");
+        put("Hakaret", "3h");
+        put("Küfür Kullanımı", "3h");
+        put("Tartışma", "3h");
+        put("Kışkırtma", "3h");
+        put("Yetkilileri Rahatsız Etmek", "3h");
+        put("Sohbete Ada Reklamını Mesaj Olarak Atmak", "3h");
+        put("Dini Muhabbet", "9h");
+        put("Siyasi Muhabbet", "9h");
+        put("Link Paylaşımı", "12h");
+        put("Reklam", "12h");
+        put("Ailevi Küfür Kullanımı", "12h");
+        put("Yetkiliye Özelden Hakaret", "12h");
+    }};
     
     public static MuteAssistConfig getInstance() {
         if (instance == null) {
@@ -134,5 +158,32 @@ public class MuteAssistConfig {
         if (customReasons.remove(reason)) {
             save();
         }
+    }
+    
+    // Methods for reason-duration mapping
+    public String getDurationForReason(String reason) {
+        return reasonDurationMap.get(reason);
+    }
+    
+    public Map<String, String> getReasonDurationMap() {
+        return new HashMap<>(reasonDurationMap);
+    }
+    
+    public List<String> getFastMuteReasons() {
+        return new ArrayList<>(reasonDurationMap.keySet());
+    }
+    
+    public void addReasonDurationMapping(String reason, String duration) {
+        reasonDurationMap.put(reason, duration);
+        // Also add to custom reasons if not already present
+        if (!customReasons.contains(reason)) {
+            customReasons.add(reason);
+        }
+        save();
+    }
+    
+    public void removeReasonDurationMapping(String reason) {
+        reasonDurationMap.remove(reason);
+        save();
     }
 }

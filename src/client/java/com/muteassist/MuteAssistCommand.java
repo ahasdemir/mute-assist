@@ -245,6 +245,46 @@ public class MuteAssistCommand {
                             CommandUtil.sendActionBar(String.format("§aUnmuted %s", player));
                             return 1;
                         })));
+
+        // Register /mf (mute fast) - automatically determines duration based on reason
+        dispatcher.register(literal("mf")
+                .then(argument("player", StringArgumentType.word())
+                        .suggests(MuteAssistCommand::suggestPlayers)
+                        .then(argument("reason", StringArgumentType.greedyString())
+                                .suggests(MuteAssistCommand::suggestFastMuteReasons)
+                                .executes(context -> {
+                                    String player = StringArgumentType.getString(context, "player");
+                                    String reason = StringArgumentType.getString(context, "reason");
+                                    
+                                    // Get duration from mapping
+                                    String duration = MuteAssistConfig.getInstance().getDurationForReason(reason);
+                                    
+                                    if (duration != null) {
+                                        String command = String.format("mute %s %s %s", player, duration, reason);
+                                        CommandUtil.sendCommand(command);
+                                        CommandUtil.sendActionBar(String.format("§aFast muted %s for %s: %s", player, duration, reason));
+                                    } else {
+                                        // If reason not found in mapping, open chat for manual entry
+                                        String partialCommand = String.format("/mute %s  %s", player, reason);
+                                        CommandUtil.openChatWithCommand(partialCommand);
+                                        CommandUtil.sendActionBar("§eReason not in fast mute table, please add duration manually");
+                                    }
+                                    return 1;
+                                }))
+                        .executes(context -> {
+                            // Show available fast mute reasons
+                            String player = StringArgumentType.getString(context, "player");
+                            sendFeedback(context.getSource(), "§eFast Mute: Use /mf " + player + " <reason>. Available reasons:");
+                            for (String reason : MuteAssistConfig.getInstance().getFastMuteReasons()) {
+                                String duration = MuteAssistConfig.getInstance().getDurationForReason(reason);
+                                sendFeedback(context.getSource(), "§7- " + reason + " §8(§6" + duration + "§8)");
+                            }
+                            return 1;
+                        }))
+                .executes(context -> {
+                    sendFeedback(context.getSource(), "§eFast Mute: /mf <player> <reason> - Auto-determines duration from reason");
+                    return 1;
+                }));
     }
 
     // --- Suggestion Methods ---
@@ -348,6 +388,32 @@ public class MuteAssistCommand {
                 .filter(duration -> duration.toLowerCase().startsWith(remaining))
                 .forEach(builder::suggest);
         
+        return builder.buildFuture();
+    }
+
+    private static CompletableFuture<Suggestions> suggestFastMuteReasons(
+            CommandContext<FabricClientCommandSource> context,
+            SuggestionsBuilder builder) {
+        
+        String remaining = builder.getRemaining().toLowerCase();
+        int suggestionsAdded = 0;
+        
+        // Get fast mute reasons from config and suggest them with duration tooltips
+        for (String reason : MuteAssistConfig.getInstance().getFastMuteReasons()) {
+            if (reason.toLowerCase().startsWith(remaining)) {
+                String duration = MuteAssistConfig.getInstance().getDurationForReason(reason);
+                Text tooltip = Text.literal("§6" + duration + " §7- " + reason);
+                builder.suggest(reason, tooltip);
+                suggestionsAdded++;
+            }
+        }
+        
+        // If no matches, show all available reasons
+        if (suggestionsAdded == 0 && !remaining.isEmpty()) {
+            builder.suggest(remaining, Text.literal("§cNo fast mute reason matches '" + remaining + "'"));
+        }
+        
+        logSuggestions("Fast Mute Reason", suggestionsAdded, remaining);
         return builder.buildFuture();
     }
 

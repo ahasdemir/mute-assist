@@ -11,6 +11,7 @@ Mod artık komutları **otomatik olarak sunucuya gönderir**! Chat ekranı açı
 /m PlayerName 1h Küfür        # Direkt mute komutu gönderir
 /tm PlayerName 30m Spam       # Direkt tempmute komutu gönderir  
 /um PlayerName                # Direkt unmute komutu gönderir
+/mf PlayerName Cinsellik      # YENİ! Otomatik süre ile hızlı mute (60m)
 ```
 
 ### Kısmi Komutlar (Chat Açılır)
@@ -36,7 +37,14 @@ Sonuç: Sunucuya "/tempmute SpammerPlayer 30m Spam" gönderilir
 Action Bar: "§aTemp muted SpammerPlayer for 30m: Spam"
 ```
 
-### Örnek 3: Unmute
+### Örnek 3: Hızlı Mute (YENİ!)
+```
+Komut: /mf BadPlayer Hakaret
+Sonuç: Sunucuya "/mute BadPlayer 3h Hakaret" gönderilir (otomatik süre)
+Action Bar: "§aFast muted BadPlayer for 3h: Hakaret"
+```
+
+### Örnek 4: Unmute
 ```
 Komut: /um PlayerName
 Sonuç: Sunucuya "/unmute PlayerName" gönderilir
@@ -58,6 +66,15 @@ Tüm komutlarda akıllı öneriler çalışır:
 ### Türkçe Sebep Önerileri
 - `Küfür`, `Spam`, `Reklam`, `Trolling`, `Saygısızlık`
 - `Caps`, `Flood`, `Taciz`, `Hakaret`, `Kavga`
+
+### Hızlı Mute Tablosu (YENİ!)
+- `Chat Kirletimi` → 10m
+- `Cinsellik` → 60m  
+- `Argo Kelime Kullanımı` → 60m
+- `Hakaret` → 3h
+- `Küfür Kullanımı` → 3h
+- `Reklam` → 12h
+- Ve daha fazlası... (Tab ile görün!)
 
 ## ⚙️ Avantajlar
 

@@ -15,6 +15,7 @@ A client-side Fabric mod for Minecraft 1.20.1 that provides **visual command sug
 - `/mute <player> <duration> <reason>` - Standard mute command with full suggestions
 - `/tempmute <player> <duration> <reason>` - Temporary mute alias
 - `/unmute <player>` - Unmute command with player suggestions
+- **`/mf <player> <reason>`** - **NEW! Fast mute with auto-duration** ⚡
 
 ### Visual Experience
 ✅ **Suggestions appear in dropdown like native commands**  
@@ -69,6 +70,7 @@ The mod enhances the following commands with intelligent suggestions:
 ```
 /mute <player> <duration> <reason>
 /tempmute <player> <duration> <reason>
+/mf <player> <reason>          # NEW! Auto-duration fast mute
 ```
 
 ### How to Use
@@ -85,6 +87,7 @@ The mod enhances the following commands with intelligent suggestions:
 /mute PlayerName 1h Chat Kirletimi
 /tempmute TrollPlayer 30m Spam
 /mute BadPlayer perm Hakaret
+/mf SpeedyPlayer Cinsellik        # NEW! Auto-applies 60m duration
 ```
 
 ## Configuration
@@ -236,10 +239,12 @@ If you encounter any issues or have suggestions:
 ### Version v0.1.0
 - Initial release
 - Smart tab completion for `/mute` and `/tempmute` commands
+- **NEW: `/mf` (fast mute) command with auto-duration detection**
 - Turkish mute reasons support
 - Configurable custom reasons and durations
 - Real-time player list updates
 - Configuration management commands
+- Predefined reason-to-duration mapping table
 
 ---
 
