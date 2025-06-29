@@ -58,7 +58,7 @@ A client-side Fabric mod for Minecraft 1.20.1 that provides **visual command sug
 
 1. **Download Fabric Loader**: Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft 1.20.1
 2. **Download Fabric API**: Get the [Fabric API](https://modrinth.com/mod/fabric-api) mod
-3. **Install the Mod**: Place the `mute-assist-v0.1.0.jar` file in your `mods` folder
+3. **Install the Mod**: Place the `mute-assist-v0.1.1.jar` file in your `mods` folder
 4. **Launch Minecraft**: Start Minecraft with the Fabric profile
 
 ## Usage
@@ -236,15 +236,20 @@ If you encounter any issues or have suggestions:
 
 ## Changelog
 
+### Version v0.1.1
+- **NEW: `/mf` (fast mute) command with auto-duration detection**
+- Added reason-to-duration mapping table integration
+- Enhanced tab-completion with duration tooltips for `/mf` command
+- Improved direct command execution system
+- Updated configuration system to support reason-duration mappings
+
 ### Version v0.1.0
 - Initial release
 - Smart tab completion for `/mute` and `/tempmute` commands
-- **NEW: `/mf` (fast mute) command with auto-duration detection**
 - Turkish mute reasons support
 - Configurable custom reasons and durations
 - Real-time player list updates
 - Configuration management commands
-- Predefined reason-to-duration mapping table
 
 ---
 

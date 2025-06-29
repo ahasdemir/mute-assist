@@ -162,7 +162,7 @@ public class MuteAssistCommand {
                             return 1;
                         }))
                 .executes(context -> {
-                    sendFeedback(context.getSource(), "Mute Assist Mod v0.1.0 - Use /muteassist config for configuration");
+                    sendFeedback(context.getSource(), "Mute Assist Mod v0.1.1 - Use /muteassist config for configuration");
                     return 1;
                 }));
 
