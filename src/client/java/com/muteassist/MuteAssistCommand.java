@@ -111,6 +111,46 @@ public class MuteAssistCommand {
                             return 1;
                         })));
 
+        // Register /mfhelp for fast mute assistance with reason suggestions
+        dispatcher.register(literal("mfhelp")
+                .then(argument("player", StringArgumentType.word())
+                        .suggests(MuteAssistCommand::suggestPlayers)
+                        .then(argument("reason", StringArgumentType.greedyString())
+                                .suggests(MuteAssistCommand::suggestFastMuteReasons)
+                                .executes(context -> {
+                                    String player = StringArgumentType.getString(context, "player");
+                                    String reason = StringArgumentType.getString(context, "reason");
+                                    
+                                    // Get duration from mapping
+                                    String duration = MuteAssistConfig.getInstance().getDurationForReason(reason);
+                                    
+                                    if (duration != null) {
+                                        String command = String.format("/mute %s %s %s", player, duration, reason);
+                                        CommandUtil.openChatWithCommand(command);
+                                        CommandUtil.sendActionBar(String.format("§aFast mute command ready! Auto-duration: %s", duration));
+                                    } else {
+                                        // If reason not found in mapping, open chat for manual entry
+                                        String partialCommand = String.format("/mute %s  %s", player, reason);
+                                        CommandUtil.openChatWithCommand(partialCommand);
+                                        CommandUtil.sendActionBar("§eReason not in fast mute table, please add duration manually");
+                                    }
+                                    return 1;
+                                }))
+                        .executes(context -> {
+                            // Show available fast mute reasons
+                            String player = StringArgumentType.getString(context, "player");
+                            sendFeedback(context.getSource(), "§eFast Mute Help: Use /mfhelp " + player + " <reason>. Available reasons:");
+                            for (String reason : MuteAssistConfig.getInstance().getFastMuteReasons()) {
+                                String duration = MuteAssistConfig.getInstance().getDurationForReason(reason);
+                                sendFeedback(context.getSource(), "§7- " + reason + " §8(§6" + duration + "§8)");
+                            }
+                            return 1;
+                        }))
+                .executes(context -> {
+                    sendFeedback(context.getSource(), "§eFast Mute Help: /mfhelp <player> <reason> - Shows mute command with auto-duration");
+                    return 1;
+                }));
+
         // Register configuration commands for managing custom reasons and durations
         dispatcher.register(literal("muteassist")
                 .then(literal("config")
@@ -246,7 +286,7 @@ public class MuteAssistCommand {
                             return 1;
                         })));
 
-        // Register /mf (mute fast) - automatically determines duration based on reason
+        // Register /mf (mute fast) - automatically determines duration and sends directly to server
         dispatcher.register(literal("mf")
                 .then(argument("player", StringArgumentType.word())
                         .suggests(MuteAssistCommand::suggestPlayers)
