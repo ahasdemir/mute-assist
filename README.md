@@ -57,7 +57,7 @@ A client-side Fabric mod for Minecraft 1.20.1 that provides **visual command sug
 
 1. **Download Fabric Loader**: Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft 1.20.1
 2. **Download Fabric API**: Get the [Fabric API](https://modrinth.com/mod/fabric-api) mod
-3. **Install the Mod**: Place the `mute-assist-1.0.0.jar` file in your `mods` folder
+3. **Install the Mod**: Place the `mute-assist-v0.1.0.jar` file in your `mods` folder
 4. **Launch Minecraft**: Start Minecraft with the Fabric profile
 
 ## Usage
@@ -233,7 +233,7 @@ If you encounter any issues or have suggestions:
 
 ## Changelog
 
-### Version 1.0.0
+### Version v0.1.0
 - Initial release
 - Smart tab completion for `/mute` and `/tempmute` commands
 - Turkish mute reasons support
