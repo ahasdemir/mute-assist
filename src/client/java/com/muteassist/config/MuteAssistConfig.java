@@ -67,26 +67,40 @@ public class MuteAssistConfig {
     public boolean enablePartialReasonMatching = true;
     
     // Reason to duration mapping for /mf command
-    public Map<String, String> reasonDurationMap = new HashMap<String, String>() {{
-        put("Chat Kirletimi", "10m");
-        put("Cinsellik", "60m");
-        put("Argo Kelime Kullanımı", "60m");
-        put("Amacı Dışında AdaReklam Kullanımı", "60m");
-        put("Argo Kelime Benzetmeleri", "30m");
-        put("Chati Amacı Dışında Kullanma", "35m");
-        put("Hakaret", "3h");
-        put("Küfür Kullanımı", "3h");
-        put("Tartışma", "3h");
-        put("Kışkırtma", "3h");
-        put("Yetkilileri Rahatsız Etmek", "3h");
-        put("Sohbete Ada Reklamını Mesaj Olarak Atmak", "3h");
-        put("Dini Muhabbet", "9h");
-        put("Siyasi Muhabbet", "9h");
-        put("Link Paylaşımı", "12h");
-        put("Reklam", "12h");
-        put("Ailevi Küfür Kullanımı", "12h");
-        put("Yetkiliye Özelden Hakaret", "12h");
-    }};
+    public Map<String, String> reasonDurationMap = new HashMap<>();
+    
+    /**
+     * Constructor to initialize default values
+     */
+    public MuteAssistConfig() {
+        initializeDefaultMappings();
+    }
+    
+    /**
+     * Initialize default reason-duration mappings
+     */
+    private void initializeDefaultMappings() {
+        if (reasonDurationMap.isEmpty()) {
+            reasonDurationMap.put("Chat Kirletimi", "10m");
+            reasonDurationMap.put("Cinsellik", "60m");
+            reasonDurationMap.put("Argo Kelime Kullanımı", "60m");
+            reasonDurationMap.put("Amacı Dışında AdaReklam Kullanımı", "60m");
+            reasonDurationMap.put("Argo Kelime Benzetmeleri", "30m");
+            reasonDurationMap.put("Chati Amacı Dışında Kullanma", "35m");
+            reasonDurationMap.put("Hakaret", "3h");
+            reasonDurationMap.put("Küfür Kullanımı", "3h");
+            reasonDurationMap.put("Tartışma", "3h");
+            reasonDurationMap.put("Kışkırtma", "3h");
+            reasonDurationMap.put("Yetkilileri Rahatsız Etmek", "3h");
+            reasonDurationMap.put("Sohbete Ada Reklamını Mesaj Olarak Atmak", "3h");
+            reasonDurationMap.put("Dini Muhabbet", "9h");
+            reasonDurationMap.put("Siyasi Muhabbet", "9h");
+            reasonDurationMap.put("Link Paylaşımı", "12h");
+            reasonDurationMap.put("Reklam", "12h");
+            reasonDurationMap.put("Ailevi Küfür Kullanımı", "12h");
+            reasonDurationMap.put("Yetkiliye Özelden Hakaret", "12h");
+        }
+    }
     
     public static MuteAssistConfig getInstance() {
         if (instance == null) {
@@ -101,6 +115,11 @@ public class MuteAssistConfig {
                 String json = Files.readString(CONFIG_PATH);
                 MuteAssistConfig config = GSON.fromJson(json, MuteAssistConfig.class);
                 if (config != null) {
+                    // Ensure mappings are initialized if they're null or empty
+                    if (config.reasonDurationMap == null) {
+                        config.reasonDurationMap = new HashMap<>();
+                    }
+                    config.initializeDefaultMappings();
                     Muteassist.LOGGER.info("Loaded Mute Assist configuration from {}", CONFIG_PATH);
                     return config;
                 }
@@ -179,11 +198,23 @@ public class MuteAssistConfig {
         if (!customReasons.contains(reason)) {
             customReasons.add(reason);
         }
+        // Add duration to custom durations if not already present
+        if (!customDurations.contains(duration)) {
+            customDurations.add(duration);
+        }
         save();
     }
     
     public void removeReasonDurationMapping(String reason) {
         reasonDurationMap.remove(reason);
         save();
+    }
+    
+    public boolean hasReasonDurationMapping(String reason) {
+        return reasonDurationMap.containsKey(reason);
+    }
+    
+    public int getMappingCount() {
+        return reasonDurationMap.size();
     }
 }

@@ -41,9 +41,17 @@ A client-side Fabric mod for Minecraft 1.20.1 that provides **visual command sug
 /mute Alice 1h Chat Kirletimi [ENTER] → Command sent!
 ```
 
+### ⚙️ Configurable Fast Mute Mappings
+- **Custom reason-duration mappings** for `/mf` command
+- **Add/remove/update mappings** through in-game commands  
+- **Automatic suggestions** with duration tooltips
+- **Consistent moderation** across your team
+- **Flexible rule management** for different servers
+
 ### ⚙️ Customizable Configuration
 - Add your own custom mute reasons
 - Add your own custom durations
+- Configure reason-to-duration mappings for fast mute
 - Enable/disable partial matching for reasons
 - Sort player suggestions alphabetically
 - Debug logging options
@@ -58,7 +66,7 @@ A client-side Fabric mod for Minecraft 1.20.1 that provides **visual command sug
 
 1. **Download Fabric Loader**: Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft 1.20.1
 2. **Download Fabric API**: Get the [Fabric API](https://modrinth.com/mod/fabric-api) mod
-3. **Install the Mod**: Place the `mute-assist-v0.1.1.jar` file in your `mods` folder
+3. **Install the Mod**: Place the `mute-assist-v0.1.2.jar` file in your `mods` folder
 4. **Launch Minecraft**: Start Minecraft with the Fabric profile
 
 ## Usage
@@ -109,7 +117,7 @@ The mod enhances the following commands with intelligent suggestions:
 
 ### Configuration Commands
 
-Manage your custom reasons and durations with these commands:
+Manage your custom reasons, durations, and fast mute mappings with these commands:
 
 ```bash
 # Add custom reason
@@ -118,11 +126,20 @@ Manage your custom reasons and durations with these commands:
 # Add custom duration
 /muteassist config add duration "2h"
 
+# Add/update fast mute mapping
+/muteassist config mapping add "Custom Violation" "1h"
+
 # Remove custom reason
 /muteassist config remove reason "Old Reason"
 
 # Remove custom duration
 /muteassist config remove duration "2h"
+
+# Remove fast mute mapping
+/muteassist config remove mapping "Old Violation"
+
+# List all fast mute mappings
+/muteassist config mapping list
 
 # Reload configuration
 /muteassist config reload
@@ -250,6 +267,13 @@ If you encounter any issues or have suggestions:
 3. Include your Minecraft version, Fabric Loader version, and mod version
 
 ## Changelog
+
+### Version v0.1.2
+
+- **Fixed Configuration Serialization**: Fixed the `reasonDurationMap` not being properly saved to the configuration file
+- **Enhanced Mapping System**: The reason-to-duration mapping is now fully persistent and configurable
+- **Improved Config Loading**: Added proper initialization to ensure mappings are loaded correctly
+- **Better Error Handling**: Enhanced configuration loading with proper fallbacks and null checks
 
 ### Version v0.1.1
 - **NEW: `/mf` (fast mute) command with auto-duration detection**

@@ -12,6 +12,9 @@ public class MuteassistClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		Muteassist.LOGGER.info("Mute Assist Mod client initialized!");
 
+		// Initialize configuration on client startup
+		MuteAssistConfig.getInstance();
+
 		// Register the client-side command callback
 		ClientCommandRegistrationCallback.EVENT.register(MuteAssistCommand::register);
 

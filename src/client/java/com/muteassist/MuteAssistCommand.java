@@ -189,7 +189,63 @@ public class MuteAssistCommand {
                                                     MuteAssistConfig.getInstance().removeDuration(duration);
                                                     sendFeedback(context.getSource(), "Removed custom duration: " + duration);
                                                     return 1;
+                                                })))
+                                .then(literal("mapping")
+                                        .then(argument("reason", StringArgumentType.greedyString())
+                                                .suggests(MuteAssistCommand::suggestFastMuteReasons)
+                                                .executes(context -> {
+                                                    String reason = StringArgumentType.getString(context, "reason");
+                                                    if (MuteAssistConfig.getInstance().getReasonDurationMap().containsKey(reason)) {
+                                                        String oldDuration = MuteAssistConfig.getInstance().getDurationForReason(reason);
+                                                        MuteAssistConfig.getInstance().removeReasonDurationMapping(reason);
+                                                        sendFeedback(context.getSource(), "Removed fast mute mapping: " + reason + " (was " + oldDuration + ")");
+                                                    } else {
+                                                        sendFeedback(context.getSource(), "Reason not found in fast mute mappings!");
+                                                    }
+                                                    return 1;
                                                 }))))
+                        .then(literal("mapping")
+                                .then(literal("add")
+                                        .then(argument("reason", StringArgumentType.greedyString())
+                                                .then(argument("duration", StringArgumentType.string())
+                                                        .suggests(MuteAssistCommand::suggestConfigDurations)
+                                                        .executes(context -> {
+                                                            String reason = StringArgumentType.getString(context, "reason");
+                                                            String duration = StringArgumentType.getString(context, "duration");
+                                                            
+                                                            String oldDuration = MuteAssistConfig.getInstance().getDurationForReason(reason);
+                                                            MuteAssistConfig.getInstance().addReasonDurationMapping(reason, duration);
+                                                            
+                                                            if (oldDuration != null) {
+                                                                sendFeedback(context.getSource(), "Updated fast mute mapping: " + reason + " (" + oldDuration + " → " + duration + ")");
+                                                            } else {
+                                                                sendFeedback(context.getSource(), "Added fast mute mapping: " + reason + " → " + duration);
+                                                            }
+                                                            return 1;
+                                                        }))))
+                                .then(literal("list")
+                                        .executes(context -> {
+                                            var mappings = MuteAssistConfig.getInstance().getReasonDurationMap();
+                                            
+                                            if (mappings.isEmpty()) {
+                                                sendFeedback(context.getSource(), "No fast mute mappings configured.");
+                                                return 1;
+                                            }
+                                            
+                                            sendFeedback(context.getSource(), "=== Fast Mute Mappings ===");
+                                            for (var entry : mappings.entrySet()) {
+                                                sendFeedback(context.getSource(), entry.getKey() + " → " + entry.getValue());
+                                            }
+                                            sendFeedback(context.getSource(), "Total: " + mappings.size() + " mappings");
+                                            return 1;
+                                        }))
+                                .executes(context -> {
+                                    sendFeedback(context.getSource(), "Fast Mute Mapping Commands:");
+                                    sendFeedback(context.getSource(), "/muteassist config mapping add <reason> <duration> - Add/update mapping");
+                                    sendFeedback(context.getSource(), "/muteassist config remove mapping <reason> - Remove mapping");
+                                    sendFeedback(context.getSource(), "/muteassist config mapping list - List all mappings");
+                                    return 1;
+                                }))
                         .then(literal("reload")
                                 .executes(context -> {
                                     // Force reload configuration
@@ -198,11 +254,16 @@ public class MuteAssistCommand {
                                     return 1;
                                 }))
                         .executes(context -> {
-                            sendFeedback(context.getSource(), "Available commands: add, remove, reload");
+                            sendFeedback(context.getSource(), "=== Mute Assist Configuration ===");
+                            sendFeedback(context.getSource(), "Reasons: " + MuteAssistConfig.getInstance().getReasons().size() + " configured");
+                            sendFeedback(context.getSource(), "Durations: " + MuteAssistConfig.getInstance().getDurations().size() + " configured");
+                            sendFeedback(context.getSource(), "Fast Mute Mappings: " + MuteAssistConfig.getInstance().getReasonDurationMap().size() + " configured");
+                            sendFeedback(context.getSource(), "");
+                            sendFeedback(context.getSource(), "Available commands: add, remove, mapping, reload");
                             return 1;
                         }))
                 .executes(context -> {
-                    sendFeedback(context.getSource(), "Mute Assist Mod v0.1.1 - Use /muteassist config for configuration");
+                    sendFeedback(context.getSource(), "Mute Assist Mod v0.1.2 - Use /muteassist config for configuration");
                     return 1;
                 }));
 

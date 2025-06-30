@@ -113,8 +113,8 @@ src/
 - **Environment**: Client-side only
 
 ### Build Artifacts
-- `mute-assist-v0.1.1.jar` - Main mod file
-- `mute-assist-v0.1.1-sources.jar` - Source code
+- `mute-assist-v0.1.2.jar` - Main mod file
+- `mute-assist-v0.1.2-sources.jar` - Source code
 - Configuration file created at `config/mute-assist.json`
 
 ## How to Use
