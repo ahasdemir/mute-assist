@@ -81,24 +81,28 @@ public class MuteAssistConfig {
      */
     private void initializeDefaultMappings() {
         if (reasonDurationMap.isEmpty()) {
-            reasonDurationMap.put("Chat Kirletimi", "10m");
+            reasonDurationMap.put("Sohbet Kirletimi (1. Uyarı)", "15m");
+            reasonDurationMap.put("Sohbet Kirletimi (Tekrar)", "1h");
             reasonDurationMap.put("Cinsellik", "60m");
-            reasonDurationMap.put("Argo Kelime Kullanımı", "60m");
+            reasonDurationMap.put("Cinsellik (Tekrar)", "3h");
+            reasonDurationMap.put("Argo Kelime Kullanımı", "20m");
+            reasonDurationMap.put("Argo Kelime Kullanımı (Tekrar)", "1h");
             reasonDurationMap.put("Amacı Dışında AdaReklam Kullanımı", "60m");
-            reasonDurationMap.put("Argo Kelime Benzetmeleri", "30m");
-            reasonDurationMap.put("Chati Amacı Dışında Kullanma", "35m");
-            reasonDurationMap.put("Hakaret", "3h");
-            reasonDurationMap.put("Küfür Kullanımı", "3h");
-            reasonDurationMap.put("Tartışma", "3h");
-            reasonDurationMap.put("Kışkırtma", "3h");
-            reasonDurationMap.put("Yetkilileri Rahatsız Etmek", "3h");
-            reasonDurationMap.put("Sohbete Ada Reklamını Mesaj Olarak Atmak", "3h");
-            reasonDurationMap.put("Dini Muhabbet", "9h");
-            reasonDurationMap.put("Siyasi Muhabbet", "9h");
-            reasonDurationMap.put("Link Paylaşımı", "12h");
-            reasonDurationMap.put("Reklam", "12h");
-            reasonDurationMap.put("Ailevi Küfür Kullanımı", "12h");
-            reasonDurationMap.put("Yetkiliye Özelden Hakaret", "12h");
+            reasonDurationMap.put("Amacı Dışında AdaReklam Kullanımı(Tekrar)", "2h");
+            reasonDurationMap.put("Hakaret", "30m");
+            reasonDurationMap.put("Hakaret (Tekrar)", "2h");
+            reasonDurationMap.put("Küfür Kullanımı", "30m");
+            reasonDurationMap.put("Küfür Kullanımı(Tekrar)", "2h");
+            reasonDurationMap.put("Kavga", "30m");
+            reasonDurationMap.put("Kavga (Tekrar)", "2h");
+            reasonDurationMap.put("Kışkırtma", "30m");
+            reasonDurationMap.put("Kışkırtma (Tekrar)", "2h");
+            reasonDurationMap.put("Dini Değerlere Hareket", "3h");
+            reasonDurationMap.put("Dini Değerlere Hareket (Tekrar)", "8h");
+            reasonDurationMap.put("Siyaset Yapmak", "3h");
+            reasonDurationMap.put("Siyaset Yapmak (Tekrar)", "8h");
+            reasonDurationMap.put("Ailevi Küfür Kullanımı", "3h");
+            reasonDurationMap.put("Ailevi Küfür Kullanımı (Tekrar)", "8h");
         }
     }
     

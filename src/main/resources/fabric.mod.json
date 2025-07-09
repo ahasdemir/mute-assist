@@ -5,11 +5,11 @@
 	"name": "Mute Assist",
 	"description": "A client-side Fabric mod that provides intelligent, context-aware suggestions for the /mute command in Minecraft. Features smart tab completion for player names, durations, and Turkish mute reasons.",
 	"authors": [
-		"MuteAssist Team"
+		"ahasdemir"
 	],
 	"contact": {
-		"homepage": "https://github.com/your-username/mute-assist-mod",
-		"sources": "https://github.com/your-username/mute-assist-mod"
+		"homepage": "https://github.com/ahasdemir/mute-assist",
+		"sources": "https://hasdemir.me"
 	},
 	"license": "MIT",
 	"icon": "assets/mute-assist/icon.png",

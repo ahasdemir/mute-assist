@@ -1,0 +1,117 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v0.1.2, v1.0.0
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+    
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    
+    - name: Build with Gradle
+      run: ./gradlew build --no-daemon
+    
+    - name: Get version from tag
+      id: get_version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/}
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "VERSION_NUMBER=${VERSION#v}" >> $GITHUB_OUTPUT
+    
+    - name: Verify build outputs
+      run: |
+        echo "Built files:"
+        ls -la build/libs/
+        echo "Expected files:"
+        echo "- mute-assist-${{ steps.get_version.outputs.VERSION_NUMBER }}.jar"
+        echo "- mute-assist-${{ steps.get_version.outputs.VERSION_NUMBER }}-sources.jar"
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          build/libs/mute-assist-*.jar
+        name: "Mute Assist ${{ steps.get_version.outputs.VERSION }}"
+        body: |
+          ## 🎯 Mute Assist ${{ steps.get_version.outputs.VERSION }}
+          
+          ### ✨ Features
+          - **Fast Mute Commands**: Use `/mf <player> <reason>` for instant muting with pre-configured durations
+          - **Smart Tab Completion**: Intelligent suggestions for players, reasons, and durations
+          - **Configurable Mappings**: Fully customizable reason-to-duration mappings via in-game commands
+          - **Turkish Language Support**: Optimized for Turkish Minecraft servers with localized mute reasons
+          
+          ### 🔧 Available Commands
+          - `/mf <player> <reason>` - Fast mute with auto-duration
+          - `/m <player> <duration> <reason>` - Quick mute shortcut
+          - `/tm <player> <duration> <reason>` - Quick tempmute shortcut  
+          - `/um <player>` - Quick unmute shortcut
+          - `/muteassist config` - Configuration management
+          
+          ### ⚙️ Configuration Features
+          - `/muteassist config mapping add <reason> <duration>` - Add custom mappings
+          - `/muteassist config remove mapping <reason>` - Remove mappings
+          - `/muteassist config mapping list` - List all mappings
+          - Manual JSON file editing supported
+          
+          ### 📦 Downloads
+          - **mute-assist-${{ steps.get_version.outputs.VERSION_NUMBER }}.jar** - Main mod file (place in mods folder)
+          - **mute-assist-${{ steps.get_version.outputs.VERSION_NUMBER }}-sources.jar** - Source code for developers
+          
+          ### 🚀 Installation
+          1. Download `mute-assist-${{ steps.get_version.outputs.VERSION_NUMBER }}.jar`
+          2. Place in your `.minecraft/mods` folder
+          3. Requires **Fabric Loader** and **Fabric API**
+          4. Compatible with **Minecraft 1.20.1**
+          
+          ### 🔄 Upgrading
+          If upgrading from a previous version, your configuration will be automatically migrated.
+          
+          ### 📋 Default Reason Mappings
+          - Chat violations: 15m - 1h
+          - Harassment: 30m - 2h  
+          - Inappropriate content: 1h - 3h
+          - Religious/Political content: 3h - 8h
+          - And more configurable mappings...
+          
+          ---
+          
+          **Full changelog and technical details available in the repository.**
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: mute-assist-${{ steps.get_version.outputs.VERSION_NUMBER }}
+        path: |
+          build/libs/mute-assist-*.jar
+        retention-days: 30
