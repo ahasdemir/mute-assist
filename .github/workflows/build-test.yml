@@ -24,7 +24,7 @@ jobs:
       run: chmod +x gradlew
     
     - name: Cache Gradle packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -43,7 +43,7 @@ jobs:
         ls -la build/libs/
     
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: success()
       with:
         name: mute-assist-build-${{ github.sha }}
