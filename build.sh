@@ -18,7 +18,7 @@ if [ $? -eq 0 ]; then
     echo "==================================="
     echo
     echo "Mod JAR file created:"
-    echo "build/libs/mute-assist-v0.1.2.jar"
+    echo "build/libs/mute-assist-v0.1.3.jar"
     echo
     echo "To install:"
     echo "1. Copy the JAR file to your mods folder"
