@@ -248,9 +248,10 @@ public class MuteAssistCommand {
                                 }))
                         .then(literal("reload")
                                 .executes(context -> {
-                                    // Force reload configuration
-                                    MuteAssistConfig.getInstance().save();
-                                    sendFeedback(context.getSource(), "Configuration reloaded!");
+                                    // Force reload configuration from file
+                                    MuteAssistConfig.forceReload();
+                                    sendFeedback(context.getSource(), "§aConfiguration reloaded from file!");
+                                    sendFeedback(context.getSource(), "§eReason-Duration mappings: " + MuteAssistConfig.getInstance().getMappingCount());
                                     return 1;
                                 }))
                         .executes(context -> {

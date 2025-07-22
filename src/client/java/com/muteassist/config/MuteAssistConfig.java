@@ -23,6 +23,7 @@ public class MuteAssistConfig {
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("mute-assist.json");
     
     private static MuteAssistConfig instance;
+    private static long lastModified = 0; // Dosya değişiklik zamanını takip et
     
     // Default configuration values
     public List<String> customDurations = new ArrayList<>(Arrays.asList(
@@ -107,10 +108,44 @@ public class MuteAssistConfig {
     }
     
     public static MuteAssistConfig getInstance() {
+        // Dosya değişikliğini kontrol et
+        if (shouldReload()) {
+            Muteassist.LOGGER.info("Config file changed, reloading...");
+            instance = null; // Force reload
+        }
+        
         if (instance == null) {
             instance = load();
         }
         return instance;
+    }
+    
+    /**
+     * Manuel olarak config'i yeniden yükler
+     */
+    public static void forceReload() {
+        Muteassist.LOGGER.info("Force reloading configuration...");
+        instance = null;
+        lastModified = 0; // Reset timestamp
+        getInstance(); // Trigger reload
+    }
+    
+    /**
+     * Config dosyasının değişip değişmediğini kontrol eder
+     */
+    private static boolean shouldReload() {
+        try {
+            if (Files.exists(CONFIG_PATH)) {
+                long currentModified = Files.getLastModifiedTime(CONFIG_PATH).toMillis();
+                if (currentModified > lastModified) {
+                    lastModified = currentModified;
+                    return instance != null; // İlk yüklemede reload etme
+                }
+            }
+        } catch (IOException e) {
+            Muteassist.LOGGER.warn("Failed to check config file modification time: {}", e.getMessage());
+        }
+        return false;
     }
     
     private static MuteAssistConfig load() {
@@ -119,11 +154,23 @@ public class MuteAssistConfig {
                 String json = Files.readString(CONFIG_PATH);
                 MuteAssistConfig config = GSON.fromJson(json, MuteAssistConfig.class);
                 if (config != null) {
-                    // Ensure mappings are initialized if they're null or empty
+                    // Dosya yükleme zamanını güncelle
+                    lastModified = Files.getLastModifiedTime(CONFIG_PATH).toMillis();
+                    
+                    // Null check - sadece null ise HashMap oluştur
                     if (config.reasonDurationMap == null) {
                         config.reasonDurationMap = new HashMap<>();
                     }
-                    config.initializeDefaultMappings();
+                    
+                    // Sadece mapping boşsa default mappings ekle
+                    // Dosyada mapping varsa onu kullan
+                    if (config.reasonDurationMap.isEmpty()) {
+                        config.initializeDefaultMappings();
+                        Muteassist.LOGGER.info("Config loaded with default mappings");
+                    } else {
+                        Muteassist.LOGGER.info("Config loaded with {} custom mappings from file", config.reasonDurationMap.size());
+                    }
+                    
                     Muteassist.LOGGER.info("Loaded Mute Assist configuration from {}", CONFIG_PATH);
                     return config;
                 }
@@ -143,6 +190,10 @@ public class MuteAssistConfig {
             Files.createDirectories(CONFIG_PATH.getParent());
             String json = GSON.toJson(this);
             Files.writeString(CONFIG_PATH, json);
+            
+            // Dosya kaydedildikten sonra timestamp'i güncelle
+            lastModified = Files.getLastModifiedTime(CONFIG_PATH).toMillis();
+            
             Muteassist.LOGGER.info("Saved Mute Assist configuration to {}", CONFIG_PATH);
         } catch (IOException e) {
             Muteassist.LOGGER.error("Failed to save configuration: {}", e.getMessage());
